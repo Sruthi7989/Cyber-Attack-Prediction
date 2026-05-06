@@ -1,0 +1,57 @@
+{% extends 'admin/adminbase.html' %}
+{% block title %}Admin - User Management{% endblock %}
+
+{% block content %}
+<section id="admin-home" class="section">
+  <div class="card shadow border-0 rounded-3">
+    <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0"><i class="fas fa-users-cog"></i> User Management</h4>
+      <a href="#" class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add User</a>
+    </div>
+    <div class="card-body">
+      
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Username</th>
+              <th scope="col">Email</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+              <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  {% if user.is_active %}
+                    <span class="badge bg-success">Active</span>
+                  {% else %}
+                    <span class="badge bg-danger">Inactive</span>
+                  {% endif %}
+                </td>
+                <td class="text-center">
+                  <a href="{% url 'admin_update_userstatus' user.id %}" class="btn btn-sm {% if user.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                    {% if user.is_active %}
+                      <i class="fas fa-user-slash"></i> Deactivate
+                    {% else %}
+                      <i class="fas fa-user-check"></i> Activate
+                    {% endif %}
+                  </a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="text-center text-muted">No users found.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

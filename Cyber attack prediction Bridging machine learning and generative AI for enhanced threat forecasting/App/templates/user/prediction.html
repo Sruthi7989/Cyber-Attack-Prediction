@@ -1,0 +1,51 @@
+{% extends 'user/userbase.html' %}
+{% block title %}Cyber Attack Prediction{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Cyber Attack Prediction</h3>
+    </div>
+
+    <div class="card-body">
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+
+      <form method="POST" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="features" class="form-label fw-bold">
+            Enter 40 comma-separated feature values:
+          </label>
+          <textarea
+            name="features"
+            id="features"
+            class="form-control"
+            rows="3"
+            placeholder="Example: 0.1,2,3,500,200,1.5,64,128,..."
+            required
+          ></textarea>
+          <small class="text-muted">
+            Please provide exactly 40 numeric values separated by commas.
+          </small>
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-success px-4 py-2">
+            Predict
+          </button>
+        </div>
+      </form>
+
+      {% if predicted_label %}
+        <div class="alert alert-info text-center">
+          <h4>🧠 Predicted Class: <strong>{{ predicted_label }}</strong></h4>
+          <p><strong>Class Probabilities:</strong> {{ probabilities }}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

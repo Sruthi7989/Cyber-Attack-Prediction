@@ -1,0 +1,110 @@
+{% extends 'user/userbase.html' %}
+{% block title %}Analytics - Cyber Attack Prediction{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Prediction Analytics</h3>
+    </div>
+
+    <div class="card-body">
+      {% if class_labels|length > 0 %}
+        <div class="row text-center">
+          <div class="col-md-12 mb-4">
+            <h5>📈 Predictions Over Time</h5>
+            <canvas id="lineChart" height="100"></canvas>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <h5>📊 Class Frequency</h5>
+            <canvas id="barChart" height="100"></canvas>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <h5>🥧 Class Distribution</h5>
+            <canvas id="pieChart" height="100"></canvas>
+          </div>
+        </div>
+      {% else %}
+        <div class="alert alert-warning text-center">
+          <strong>No prediction data available for analytics.</strong>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = {{ labels|safe }};
+  const classes = {{ classes|safe }};
+  const classLabels = {{ class_labels|safe }};
+  const classValues = {{ class_values|safe }};
+
+  // Define colors
+  const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#20c997'];
+
+  // Line Chart - Predictions Over Time
+  const lineCtx = document.getElementById('lineChart').getContext('2d');
+  new Chart(lineCtx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Predicted Class',
+        data: classes.map(c => classLabels.indexOf(c) + 1),
+        borderColor: '#007bff',
+        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+        tension: 0.3,
+        fill: true,
+        pointRadius: 4,
+      }]
+    },
+    options: {
+      scales: {
+        y: { 
+          ticks: {
+            callback: (val) => classLabels[val - 1] || '',
+          },
+          beginAtZero: true,
+          stepSize: 1
+        }
+      }
+    }
+  });
+
+  // Bar Chart - Class Frequency
+  const barCtx = document.getElementById('barChart').getContext('2d');
+  new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels: classLabels,
+      datasets: [{
+        label: 'Count',
+        data: classValues,
+        backgroundColor: colors.slice(0, classLabels.length),
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Pie Chart - Class Distribution
+  const pieCtx = document.getElementById('pieChart').getContext('2d');
+  new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+      labels: classLabels,
+      datasets: [{
+        data: classValues,
+        backgroundColor: colors.slice(0, classLabels.length),
+      }]
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Register - Cyber_Attack_Prediction{% endblock %}
+
+{% block content %}
+<div class="col-md-8 col-lg-6 mx-auto bg-white p-5 rounded shadow-lg">
+  <h2 class="fw-bold mb-4 text-center">Create an Account</h2>
+  {% if messages %}
+  <div class="container mb-4">
+    {% for message in messages %}
+      <div class="alert 
+                  {% if message.tags == 'error' %}alert-danger
+                  {% elif message.tags == 'success' %}alert-success
+                  {% elif message.tags == 'warning' %}alert-warning
+                  {% else %}alert-info{% endif %} 
+                  alert-dismissible fade show shadow-sm" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+  <form action="{% url 'user_registration' %}" method="post">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        <input type="text" name="first_name" class="form-control" placeholder="First Name" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="username" class="form-control" placeholder="Username" required>
+      </div>
+      <div class="col-md-6">
+        <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+      </div>
+      <div class="col-md-6">
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+      </div>
+      <div class="col-md-6">
+        <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-warning text-white px-5 py-2 rounded-pill shadow">
+        <i class="fas fa-user-plus"></i> Register
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
